@@ -14,8 +14,6 @@
 - **Hosting:** Vercel
 - **Optional:** Serverless functions for custom logic
 
----
-
 ## User Personas
 
 ### Resident / Citizen
@@ -32,8 +30,6 @@
 - **Profile:** Local waste officer, needs structured data  
 - **Goals:** Prioritize actions, track trends, respond to reports  
 - **Actions:** View dashboard, update issue status, export reports  
-
----
 
 ## Features
 
@@ -60,8 +56,6 @@
 - Send notifications to volunteers or admins for urgent issues
 - Weekly summary calculation for admin dashboard
 
----
-
 ## User Flow
 1. Resident opens the app  
 2. Submits a waste issue via form (type, location, photo)  
@@ -70,8 +64,6 @@
 5. Admin/volunteer marks as acknowledged/cleaned  
 6. Status updates propagate in real-time to residents  
 7. Optional analytics or weekly summary displayed on dashboard  
-
----
 
 ## MVP Scope & Timeline (10 Days)
 
@@ -87,15 +79,11 @@
 | 9   | Polish UI, responsive design, test flows, bug fixes |
 | 10  | Record demo video (2–3 min), prepare Devpost submission |
 
----
-
 ## Success Metrics
 - Functional MVP: report → map → status update works end-to-end  
 - Ease of use: form submission <30s for residents  
 - Visual clarity: map & list show issues and statuses clearly  
 - Judge criteria: Real-World Impact, End-to-End Solution, Pitch & Demo readiness  
-
----
 
 ## Deliverables
 - Live PWA hosted on Vercel  
@@ -107,8 +95,6 @@
   - How it works
   - Codebase link
 - Optional: analytics dashboard / heatmap for judges  
-
----
 
 ## Constraints / Notes
 - Build must be completed in 10 days  
