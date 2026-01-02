@@ -1,125 +1,92 @@
-# AI Coding Agent Instructions for waste-watch
+# AI Coding Agent Principles for WasteWatch
 
-## Project Overview
-**WasteWatch** is a mobile-first PWA for community waste management that enables residents to report, track, and monitor waste issues in real-time. Built for the Alameda Hacks hackathon (10-day MVP targeting "Best Real-World Impact" award).
+## Project Focus
+- Build a **mobile-first PWA** for community waste management.
+- Prioritize **real-time reporting, tracking, and status updates** of waste issues.
+- Ensure all features align with the **MVP scope** and enhance **user experience**.
 
-**Tech Stack:**
-- **Frontend:** Next.js 16.1.1 (App Router) + React 19 + TypeScript 5 + Tailwind CSS v4
-- **Backend/BaaS:** Supabase (PostgreSQL, Auth, Storage, Row Level Security)
-- **Maps:** Leaflet.js + OpenStreetMap
-- **Package Manager:** pnpm (see [pnpm-workspace.yaml](../pnpm-workspace.yaml))
-- **Hosting:** Vercel
+---
 
-**Core User Flows:**
-1. Resident reports waste issue (type, location, photo)
-2. Issue stored in Supabase, appears on public map
-3. Volunteers/admins mark as acknowledged → cleaned
-4. Status updates propagate in real-time
+## Coding Principles
 
-## Development Workflow
+### Component & File Patterns
+- Default exports for page components (required by Next.js App Router)
+- Use **TypeScript** for all `.tsx` files
+- Server Components by default; `"use client"` only when client-side interactivity is needed
+- Prioritize **ShadCN UI components** for UI primitives (Button, Card, Input, Select, Dialog)
+- Compose ShadCN components instead of recreating existing primitives
+- Export `metadata` object from page/layout files for SEO
 
-### Running the Project
-- **Dev server**: `pnpm dev` (opens on http://localhost:3000)
-- **Build**: `pnpm build` 
-- **Production**: `pnpm start`
-- **Linting**: `pnpm lint`
+### Styling Guidelines
+- Use **Tailwind CSS v4 utility classes** inline with `className`
+- Dark mode: use `dark:` prefix (e.g., `dark:bg-black`, `dark:text-zinc-50`)
+- Responsive design: use breakpoint prefixes (`sm:`, `md:`, `lg:`)
+- Global theme variables: `--background`, `--foreground`; use `prefers-color-scheme` for dark mode
+- Fonts: Geist Sans and Geist Mono as CSS variables (`--font-geist-sans`, `--font-geist-mono`)
 
-### Package Management
-Always use `pnpm` commands (not npm/yarn):
-```bash
-pnpm add <package>        # Add dependency
-pnpm add -D <package>     # Add dev dependency
-pnpm install              # Install dependencies
-```
+### Supabase & Backend Principles
+- Follow **Row Level Security (RLS)** patterns for data access
+- Real-time updates for waste report status on map/dashboard
+- Storage bucket: `waste-photos` for user-uploaded images
+- Auth: Supabase Auth patterns; integrate with Server Components where possible
 
-## Core Features & Data Model
+### Map & Location Features
+- Leaflet.js components must be client-side (`"use client"`)
+- Map markers reflect **status**: red=reported, yellow=acknowledged, green=cleaned
+- Map pin selection for location input in forms
+- Optional: heatmap layer for urgent report visualization
 
-### MVP Features (Must-Have)
-- **User authentication:** Email/password or social login via Supabase Auth
-- **Report submission:** Issue type, location (map pin/auto-detect), photo upload to Supabase Storage
-- **Public map:** Display all reported issues using Leaflet.js
-- **Status tracking:** Reported → Acknowledged → Cleaned (update workflow)
-- **List view:** Filter by status, type, proximity
-
-### Optional Features
-- Upvote/duplicate detection, leaderboard, heatmap, notifications, weekly community score
-
-### Database Schema (Supabase)
-Key tables to implement:
-- `waste_reports`: id, user_id, issue_type, location (PostGIS point), photo_url, status, created_at, updated_at
-- `users`: id (Supabase Auth), display_name, role (resident/volunteer/admin)
-- `report_votes`: user_id, report_id (for upvoting duplicates)
-
-## Architecture & File Structure
-
-### App Router Structure
-- All routes live in [app/](../app/) directory using Next.js App Router conventions
-- [app/layout.tsx](../app/layout.tsx) defines the root layout with Geist font configuration
-- [app/page.tsx](../app/page.tsx) is the home page (route: `/`)
-- Planned routes: `/report` (submit form), `/map` (public map), `/dashboard` (admin/volunteer)
-
-### Styling Approach
-- **Tailwind CSS v4** with PostCSS plugin (see [postcss.config.mjs](../postcss.config.mjs))
-- Global styles in [app/globals.css](../app/globals.css) using `@import "tailwindcss"` and `@theme inline` syntax
-- CSS custom properties for theming: `--background`, `--foreground`, with dark mode via `prefers-color-scheme`
-- Geist Sans and Geist Mono fonts are configured as CSS variables: `--font-geist-sans`, `--font-geist-mono`
-- **Mobile-first design:** App must be responsive for primary mobile use case
-
-### Supabase Integration
-- Initialize Supabase client in `@/lib/supabase.ts` (server) and `@/lib/supabase-browser.ts` (client)
-- Use Row Level Security (RLS) for data access control
-- Storage buckets for photo uploads: `waste-photos` bucket with public read access
-- Real-time subscriptions for live status updates on map/dashboard
-- Auth patterns: Use Supabase Auth with Server Components where possible
-
-### Map Integration (Leaflet.js)
-- Leaflet requires client-side rendering: wrap in `"use client"` component
-- Display markers for each waste report with color-coded status (red=reported, yellow=acknowledged, green=cleaned)
-- Add map pin selection for location input in report form
-- Optional: Heatmap layer for hotspot visualization
-
-### TypeScript Configuration
-- Path alias: `@/*` maps to project root (e.g., `import { foo } from "@/app/utils"`)
+### TypeScript & Project Structure
+- Path alias: `@/*` maps to project root
 - Strict mode enabled
 - Target: ES2017
-- JSX transformed to `react-jsx` (no need to import React in components)
+- JSX: `react-jsx` transform
 
-### ESLint Configuration
-- Modern flat config format ([eslint.config.mjs](../eslint.config.mjs))
-- Uses Next.js ESLint presets: `eslint-config-next/core-web-vitals` and `eslint-config-next/typescript`
-- Ignores: `.next/`, `out/`, `build/`, `next-env.d.ts`
+### ESLint & Code Quality
+- Follow modern flat ESLint config
+- Use Next.js ESLint presets (`core-web-vitals` and `typescript`)
+- Ignore build/output folders (`.next/`, `out/`, `build/`)
 
-## Code Conventions
+---
 
-### Component Patterns
-- Default exports for page components (required by Next.js App Router)
-- TypeScript for all `.tsx` files
-- Use Next.js `Image` component from `next/image` for images (see [app/page.tsx](../app/page.tsx#L1))
-- Server Components by default (add `"use client"` directive only when needed)
+## Component & Page Guidelines
+- Default export for all pages
+- Use Next.js `Image` component for images
+- Server Components preferred; `"use client"` only when hooks, event handlers, or browser APIs are required
+- Compose pages and components to follow **MVP features**: report submission, public map, status tracking, list view
+- Metadata must be exported for each page/layout
 
-### Metadata
-- Export `metadata` object from page/layout files for SEO (see [app/layout.tsx](../app/layout.tsx#L16-L19))
+### Adding Pages or Components
+- Create page in `app/` directory
+- Add `page.tsx` with default export
+- Optionally, add `layout.tsx` for route-specific layout
+- Use `"use client"` directive only for client-side interactivity
 
-### Styling
-- Use Tailwind utility classes inline with `className` prop
-- Dark mode classes using `dark:` prefix (e.g., `dark:bg-black`, `dark:text-zinc-50`)
-- Responsive classes with breakpoint prefixes (e.g., `sm:`, `md:`)
+---
 
-## Common Tasks
+## Feature Implementation Principles
 
-### Adding a New Page
-1. Create directory in `app/` (e.g., `app/about/`)
-2. Add `page.tsx` with default export function
-3. Optionally add `layout.tsx` for route-specific layout
+### MVP Features
+- User authentication (email/password or social login)
+- Waste report submission: type, location, optional photo
+- Public map displaying reports
+- Status tracking workflow: Reported → Acknowledged → Cleaned
+- List view with filtering by status, type, proximity
 
-### Adding Client Interactivity
-Add `"use client"` directive at the top of the file when using hooks, event handlers, or browser APIs.
+### Optional/Value-Add Features
+- Upvote/duplicate detection
+- Leaderboard or engagement points
+- Weekly community cleanliness score
+- Notifications on status change
+- Heatmap for urgent areas
 
-### Environment Variables
-Create `.env.local` for local environment variables (not committed to git). Access with `process.env.VARIABLE_NAME`.
+---
 
-Required environment variables:
-```env
-NEXT_PUBLIC_SUPABASE_URL=your-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-```
+## AI Agent Guidelines
+- Always follow **project coding conventions** and **MVP priorities**
+- Do **not introduce external patterns** outside the tech stack
+- Ensure components are **composable, maintainable, and consistent**
+- Keep all features aligned with **real-time updates, responsiveness, and mobile-first design**
+- Use **ShadCN UI primitives** wherever applicable
+- Maintain **strict TypeScript typing** for all files
+- Respect **project folder structure and Next.js App Router conventions**
